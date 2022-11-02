@@ -1,5 +1,6 @@
 import json
 
+from flask_jwt_extended import jwt_required
 from . import products_bp
 from .views import ProductView
 from app import websock
@@ -34,7 +35,8 @@ def delete_product(id):
     return ProductView().delete_product(id)
 
 
-@products_bp.route('/sell/<id>', methods=['DELETE'])
+@products_bp.route('/sell/<id>', methods=['POST'])
+@jwt_required()
 def sell_product(id):
     """route to simulate sale of a product"""
     return ProductView().sell_product(id)

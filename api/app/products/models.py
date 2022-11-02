@@ -10,8 +10,8 @@ class Product(db.Model):
     name = db.Column(db.String(50), unique=True)
     qtty = db.Column(db.Integer, default=0)
     reoder_level = db.Column(db.Integer, default=5)
-    orders = db.relationship('orders', backref='product', lazy=True)
-    reorders = db.relationship('reorders', backref='product', lazy=True)
+    orders = db.relationship('Order', backref='product', lazy=True)
+    reorders = db.relationship('ReOrder', backref='product', lazy=True)
     created_at = db.Column(db.DateTime, default=datetime.now(tz=timezone('Africa/Nairobi')))
     updated_at = db.Column(db.DateTime, default=datetime.now(tz=timezone('Africa/Nairobi')))
 
@@ -20,7 +20,8 @@ class Product(db.Model):
     def serializer(self):
         return {
             'id': self.id,
-            'email': self.email,
+            'name': self.name,
+            'qtty': self.qtty,
             'reorder_level': self.reoder_level,
             'orders': [
                 order.serializer

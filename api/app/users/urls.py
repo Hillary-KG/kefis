@@ -4,7 +4,7 @@ from .views import UserView
 
 
 @users_bp.route('/register', methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def register_user():
     """route to register user"""
     return UserView().add_user()

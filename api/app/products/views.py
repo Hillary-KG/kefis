@@ -4,6 +4,7 @@ from flask_jwt_extended import current_user
 from app.orders.models import Order
 
 from .models import Product
+from .functions import run_sale
 
 class ProductView:
     """holds the view function logic product:::: manipulation of product objects"""
@@ -137,7 +138,7 @@ class ProductView:
                 }), 401
             
             # fetch product:
-            product = Product().get_one(id)
+            product = Product().get_one(int(id))
             if not product:
                 return jsonify({
                     'success': False,
@@ -145,15 +146,22 @@ class ProductView:
                 }), 400
             reorder_level = product.get('qtty')
             qtty = product.get('qtty')
-            # create order
-            order_id = Order().add({
-                'product_id': id
-            })
-            if not order_id:
+
+            unfulfillled = Order().get_unfulfilled(id)
+            if unfulfillled:
                 return jsonify({
                     'success': False,
-                    'msg': "could not generate order"
-                }), 404
+                    'msg': "unfulfilled orders cannot be more than one!"
+                }), 400
+            # create order
+            # order_id = Order().add({
+            #     'product_id': id
+            # })
+            # if not order_id:
+            #     return jsonify({
+            #         'success': False,
+            #         'msg': "could not generate order"
+            #     }), 404
 
             if qtty == 0:
                 return jsonify({
@@ -161,22 +169,33 @@ class ProductView:
                     'msg': "product not available for sale"
                 }), 404
 
-            unfulfillled = Order().get_unfulfilled(id)
-            if len(unfulfillled) >= 1:
+            # updated_ = Product().update_product(id, {'qtty': qtty - 1})
+            # if not updated_:
+            #     return jsonify({
+            #         'success': False,
+            #         'msg': "sale failed. try again",
+            #     }), 400
+            # # update order 
+            # order = Order().update_order(
+            #     order_id,
+            #     {
+            #         'status': 1
+            #     }
+            # )
+            # if not order:
+            #     return jsonify({
+            #         'success': False,
+            #         'msg': "sale failed. could not update order",
+            #     }), 400
+            # make a reorder if reorder level reached
+            # if qtty == reorder_level:
+            #     pass
+            if not run_sale(id, qtty):
                 return jsonify({
                     'success': False,
-                    'msg': "unfulfilled orders cannot be more than one!"
+                    'msg': "sale failed",
                 }), 400
 
-            updated_ = Product().update_product(id, {'qtty': qtty - 1})
-            if not updated_:
-                return jsonify({
-                    'success': False,
-                    'msg': "sale failed. try again",
-                }), 400
-            # make a reorder if reorder level reached
-            if qtty == reorder_level:
-                pass
             return jsonify({
                 'success': True,
                 'msg': "product sale successful"

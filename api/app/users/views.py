@@ -23,7 +23,7 @@ class UserView:
                     'success': False,
                     'msg': "Bad request! No data submitted"
                 }), 400
-            request_data['password'] = hash_password(str(request_data['password']).encode())
+            request_data['password'] = hash_password(str(request_data['password']).encode()).decode('utf8')
             user_id = User().create(request_data)
 
             if not user_id:
@@ -114,7 +114,7 @@ class UserView:
                 }), 400
 
             if update_data.get('password'):
-                update_data['password'] = hash_password(str(update_data['password']).encode())
+                update_data['password'] = hash_password(str(update_data['password']).encode()).decode('utf8')
 
             user_id = current_user.id
 
