@@ -1,20 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './Login';
+import React from "react";
+import { Link } from "react-router-dom";
+
 
 const Home = () => {
-  return (
-    <div>
-      <h1>Home Page</h1>
-      <Router>
-        <Routes>
-            <Route exact path="/login" className="btn">
-               <LoginPage/>
-            </Route>
-        </Routes>
-    </Router>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Kefis Store</h1>
+            <Link className="btn" to="/login" >login</Link>
+        </div>
+    );
 };
 
 export default Home;
+

@@ -358,3 +358,8 @@ p {
   text-transform: capitalize;
   cursor: pointer;
 }
+
+.home {
+  text-align: center;
+  margin: 3rem;
+}
