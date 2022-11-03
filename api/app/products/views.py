@@ -137,56 +137,29 @@ class ProductView:
                     'msg': "Unauthorized"
                 }), 401
             
-            # fetch product:
+            # sanity check
             product = Product().get_one(int(id))
-            if not product:
-                return jsonify({
-                    'success': False,
-                    'msg': "invalid product"
-                }), 400
-            reorder_level = product.get('qtty')
+            unfulfilled = Order().get_unfulfilled(id)
             qtty = product.get('qtty')
 
-            unfulfillled = Order().get_unfulfilled(id)
-            if unfulfillled:
+            if not product or unfulfilled or qtty <= 0:
+                return jsonify({
+                    'success': False,
+                    'msg': "invalid order!"
+                }), 400
+            reorder_level = product.get('qtty')
+
+            if unfulfilled:
                 return jsonify({
                     'success': False,
                     'msg': "unfulfilled orders cannot be more than one!"
                 }), 400
-            # create order
-            # order_id = Order().add({
-            #     'product_id': id
-            # })
-            # if not order_id:
-            #     return jsonify({
-            #         'success': False,
-            #         'msg': "could not generate order"
-            #     }), 404
-
             if qtty == 0:
                 return jsonify({
                     'success': False,
                     'msg': "product not available for sale"
                 }), 404
-
-            # updated_ = Product().update_product(id, {'qtty': qtty - 1})
-            # if not updated_:
-            #     return jsonify({
-            #         'success': False,
-            #         'msg': "sale failed. try again",
-            #     }), 400
-            # # update order 
-            # order = Order().update_order(
-            #     order_id,
-            #     {
-            #         'status': 1
-            #     }
-            # )
-            # if not order:
-            #     return jsonify({
-            #         'success': False,
-            #         'msg': "sale failed. could not update order",
-            #     }), 400
+            
             # make a reorder if reorder level reached
             # if qtty == reorder_level:
             #     pass

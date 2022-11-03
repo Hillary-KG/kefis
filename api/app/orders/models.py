@@ -28,9 +28,7 @@ class Order(db.Model):
     def add(self, data):
         """add order record to the db"""
         try:
-            last = Order.query.order_by(Order.created_at.desc()).first()
-            last_id = int(last.id[5] )if last else 0
-            data['id'] = str(last_id+1).zfill(6)
+            data['id'] = generateId()
             
             order = Order(**data)
 

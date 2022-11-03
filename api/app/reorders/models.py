@@ -8,6 +8,7 @@ class ReOrder(db.Model):
     """Re-Order data model definition"""
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=True)
+    name = db.Column(db.String(50), nullable=False)
     status = db.Column(db.Integer, default=0) #0-unprocessed 1-processed
     created_at = db.Column(db.DateTime, default=datetime.now(tz=timezone('Africa/Nairobi')))
     updated_at = db.Column(db.DateTime, default=datetime.now(tz=timezone('Africa/Nairobi')))
