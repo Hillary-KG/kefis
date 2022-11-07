@@ -1,11 +1,9 @@
-import kefisApis from "../../utils/apiService/api";
+import kefisApis from "../../utils/api/api";
 
 const initialState = {};
 const productsReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        case "get":
-            return state
         case "sell":
             const product_id = action.payload;
             try {
